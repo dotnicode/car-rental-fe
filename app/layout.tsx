@@ -29,7 +29,7 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased container mx-auto`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <Header />
-          {children}
+          <div className="min-h-screen">{children}</div>
         </ThemeProvider>
       </body>
     </html>
