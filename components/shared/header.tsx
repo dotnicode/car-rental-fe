@@ -1,6 +1,6 @@
 import { ModeToggle } from "../mode-toggle";
 import Link from "next/link";
-import { NavigationMenu } from "./navigation-menu";
+import { NavigationMenu } from "../navigation-menu";
 import { Icons } from "../icons";
 import { Button } from "../ui/button";
 
