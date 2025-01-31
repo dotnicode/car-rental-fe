@@ -11,7 +11,6 @@ const getCars = async (): Promise<Car[]> => {
 export default async function Home() {
   const cars = await getCars();
 
-  console.log(cars);
   return (
     <div>
       <h1 className="font-bold text-4xl text-zinc-100">Car Rental Solution</h1>

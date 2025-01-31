@@ -1,4 +1,4 @@
-import { Car } from "@/types/ car.type";
+import { Car } from "@/types/car.type";
 import Image from "next/image";
 
 async function getCarById(id: string): Promise<Car> {
