@@ -22,11 +22,17 @@ import {
 } from "@/features/user/schemas/signin.schema";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { envs } from "@/config/envs";
+import { useToast } from "@/hooks/use-toast";
+import { redirect, useRouter } from "next/navigation";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const { toast } = useToast();
+  const router = useRouter();
+
   const form = useForm<SigninSchemaType>({
     resolver: zodResolver(signinSchema),
     defaultValues: {
@@ -35,8 +41,38 @@ export function LoginForm({
     },
   });
 
-  const onSubmit = (values: SigninSchemaType): void => {
-    alert(JSON.stringify(values));
+  const onSubmit = async (values: SigninSchemaType): Promise<void> => {
+    const { email, password } = values;
+
+    try {
+      const response = await fetch(`${envs.BASE_URL}/user/signin`, {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      const data = await response.json();
+      const { accessToken, refreshToken } = data.cognitoResponse;
+
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+
+      router.push(`/home`);
+    } catch (error) {
+      if (error instanceof Error) {
+        toast({
+          title: "Error",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
+    }
   };
 
   return (
