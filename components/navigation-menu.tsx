@@ -17,33 +17,39 @@ import {
 const rentingOptions: { title: string; href: string; description: string }[] = [
   {
     title: "Reserva Inmediata",
-    href: "/car/reserve",
-    description: "Reserva tu vehículo de forma rápida y sencilla para las fechas que necesites.",
+    href: "/cars/reserve",
+    description:
+      "Reserva tu vehículo de forma rápida y sencilla para las fechas que necesites.",
   },
   {
     title: "Catálogo de Vehículos",
-    href: "/car/catalog",
-    description: "Explora nuestra amplia gama de vehículos disponibles para renta.",
+    href: "/cars/catalog",
+    description:
+      "Explora nuestra amplia gama de vehículos disponibles para renta.",
   },
   {
     title: "Ofertas Especiales",
-    href: "/car/offers",
-    description: "Descubre nuestras promociones y descuentos especiales en renta de vehículos.",
+    href: "/cars/offers",
+    description:
+      "Descubre nuestras promociones y descuentos especiales en renta de vehículos.",
   },
   {
     title: "Requisitos de Renta",
-    href: "/car/requirements",
-    description: "Información sobre los documentos y requisitos necesarios para rentar un vehículo.",
+    href: "/cars/requirements",
+    description:
+      "Información sobre los documentos y requisitos necesarios para rentar un vehículo.",
   },
   {
     title: "Seguros y Coberturas",
-    href: "/car/insurance",
-    description: "Conoce nuestras opciones de seguros y coberturas disponibles para tu tranquilidad.",
+    href: "/cars/insurance",
+    description:
+      "Conoce nuestras opciones de seguros y coberturas disponibles para tu tranquilidad.",
   },
   {
     title: "Servicios Adicionales",
-    href: "/car/services",
-    description: "GPS, sillas para bebé, conductor adicional y otros servicios complementarios.",
+    href: "/cars/services",
+    description:
+      "GPS, sillas para bebé, conductor adicional y otros servicios complementarios.",
   },
 ];
 
@@ -62,20 +68,23 @@ export function NavigationMenu() {
                     href="/"
                   >
                     <div className="-z-10 absolute inset-0 bg-gradient-to-t from-black/70 to-black/10" />
-                    <div className="mt-4 mb-2 font-medium text-lg text-white">Car Rent</div>
+                    <div className="mt-4 mb-2 font-medium text-lg text-white">
+                      Car Rent
+                    </div>
                     <p className="text-gray-100 text-sm leading-tight">
-                      Tu mejor opción para rentar vehículos de forma segura y confiable.
+                      Tu mejor opción para rentar vehículos de forma segura y
+                      confiable.
                     </p>
                   </Link>
                 </NavigationMenuLink>
               </li>
-              <ListItem href="/car" title="Renta un Auto">
+              <ListItem href="/cars" title="Renta un Auto">
                 Encuentra el vehículo perfecto para tus necesidades.
               </ListItem>
-              <ListItem href="/car/locations" title="Ubicaciones">
+              <ListItem href="/cars/locations" title="Ubicaciones">
                 Encuentra nuestras sucursales y puntos de entrega.
               </ListItem>
-              <ListItem href="/car/about" title="Sobre Nosotros">
+              <ListItem href="/cars/about" title="Sobre Nosotros">
                 Conoce nuestra historia y compromiso con el servicio.
               </ListItem>
             </ul>
@@ -87,7 +96,11 @@ export function NavigationMenu() {
           <NavigationMenuContent>
             <ul className="gap-3 grid md:grid-cols-2 p-4 w-[400px] md:w-[500px] lg:w-[600px]">
               {rentingOptions.map((option) => (
-                <ListItem key={option.title} title={option.title} href={option.href}>
+                <ListItem
+                  key={option.title}
+                  title={option.title}
+                  href={option.href}
+                >
                   {option.description}
                 </ListItem>
               ))}
@@ -97,7 +110,9 @@ export function NavigationMenu() {
 
         <NavigationMenuItem>
           <Link href="/car/contact" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>Contacto</NavigationMenuLink>
+            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              Contacto
+            </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
       </NavigationMenuList>
@@ -105,25 +120,28 @@ export function NavigationMenu() {
   );
 }
 
-const ListItem = React.forwardRef<React.ElementRef<"a">, React.ComponentPropsWithoutRef<"a">>(
-  ({ className, title, children, ...props }, ref) => {
-    return (
-      <li>
-        <NavigationMenuLink asChild>
-          <a
-            ref={ref}
-            className={cn(
-              "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-              className,
-            )}
-            {...props}
-          >
-            <div className="font-medium text-sm leading-none">{title}</div>
-            <p className="line-clamp-2 text-muted-foreground text-sm leading-snug">{children}</p>
-          </a>
-        </NavigationMenuLink>
-      </li>
-    );
-  },
-);
+const ListItem = React.forwardRef<
+  React.ElementRef<"a">,
+  React.ComponentPropsWithoutRef<"a">
+>(({ className, title, children, ...props }, ref) => {
+  return (
+    <li>
+      <NavigationMenuLink asChild>
+        <a
+          ref={ref}
+          className={cn(
+            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+            className,
+          )}
+          {...props}
+        >
+          <div className="font-medium text-sm leading-none">{title}</div>
+          <p className="line-clamp-2 text-muted-foreground text-sm leading-snug">
+            {children}
+          </p>
+        </a>
+      </NavigationMenuLink>
+    </li>
+  );
+});
 ListItem.displayName = "ListItem";
