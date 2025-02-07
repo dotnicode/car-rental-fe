@@ -1,4 +1,4 @@
-import { Car } from "@/types/car.type";
+import { Car } from "@/features/car/types/car.type";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -35,7 +35,9 @@ export default async function CarPage() {
                 />
               )}
             </div>
-            <h3 className="mb-2 font-bold text-2xl text-zinc-100">{car.brand}</h3>
+            <h3 className="mb-2 font-bold text-2xl text-zinc-100">
+              {car.brand}
+            </h3>
             <div className="space-y-2">
               <p className="text-zinc-300">
                 <span className="font-semibold">Modelo:</span> {car.model}
@@ -44,12 +46,16 @@ export default async function CarPage() {
                 <span className="font-semibold">Color:</span> {car.color}
               </p>
               <p className="text-zinc-300">
-                <span className="font-semibold">Pasajeros:</span> {car.passengers}
+                <span className="font-semibold">Pasajeros:</span>{" "}
+                {car.passengers}
               </p>
               <p className="text-zinc-300">
-                <span className="font-semibold">Aire acondicionado:</span> {car.ac ? "Sí" : "No"}
+                <span className="font-semibold">Aire acondicionado:</span>{" "}
+                {car.ac ? "Sí" : "No"}
               </p>
-              <p className="font-bold text-blue-400 text-xl">${car.pricePerDay}/día</p>
+              <p className="font-bold text-blue-400 text-xl">
+                ${car.pricePerDay}/día
+              </p>
             </div>
           </Link>
         ))}

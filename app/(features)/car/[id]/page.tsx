@@ -1,4 +1,4 @@
-import { Car } from "@/types/car.type";
+import { Car } from "@/features/car/types/car.type";
 import Image from "next/image";
 
 async function getCarById(id: string): Promise<Car> {
@@ -6,7 +6,11 @@ async function getCarById(id: string): Promise<Car> {
   return car.json();
 }
 
-export default async function CarDetailPage({ params }: { params: { id: string } }) {
+export default async function CarDetailPage({
+  params,
+}: {
+  params: { id: string };
+}) {
   const car = await getCarById(params.id);
 
   return (
@@ -29,7 +33,12 @@ export default async function CarDetailPage({ params }: { params: { id: string }
           <div className="gap-4 grid grid-cols-3">
             {car.pictures.slice(1, 4).map((picture) => (
               <div key={picture.id} className="relative h-32">
-                <Image src={picture.src} alt={`${car.brand} ${car.model}`} fill className="rounded-lg object-contain" />
+                <Image
+                  src={picture.src}
+                  alt={`${car.brand} ${car.model}`}
+                  fill
+                  className="rounded-lg object-contain"
+                />
               </div>
             ))}
           </div>
@@ -65,7 +74,9 @@ export default async function CarDetailPage({ params }: { params: { id: string }
 
             <div className="lg:pl-8 lg:border-l">
               <div className="bg-blue-50 p-6 rounded-xl">
-                <p className="mb-2 font-bold text-3xl text-blue-600">${car.pricePerDay}</p>
+                <p className="mb-2 font-bold text-3xl text-blue-600">
+                  ${car.pricePerDay}
+                </p>
                 <p className="text-gray-500">por día</p>
                 <button className="bg-blue-600 hover:bg-blue-700 mt-4 px-6 py-3 rounded-lg w-full font-medium text-white transition-colors">
                   Reservar ahora
