@@ -15,17 +15,22 @@ export default async function CarsPage() {
   const cars = await getCars();
 
   return (
-    <main className="space-y-4 mx-auto max-w-6xl">
-      {cars.map((car) => (
+    <main className="space-y-6 mx-auto max-w-6xl">
+      {cars.map((car, index) => (
         <article
           key={car.id}
-          className="gap-3 grid grid-cols-1 md:grid-cols-3 dark:bg-muted shadow-sm rounded-lg h-auto overflow-hidden"
+          className="gap-3 grid grid-cols-1 md:grid-cols-3 dark:bg-muted shadow rounded-lg h-auto overflow-hidden"
         >
-          <figure className="relative col-span-1 w-full h-48 md:h-full">
+          <figure className="relative col-span-1 w-full h-48 md:h-full aspect-video">
             <Image
-              src={"/vehicle-placeholder.png"}
+              src={
+                car.pictures[0]
+                  ? car.pictures[0].src
+                  : "/vehicle-placeholder.png"
+              }
               alt={car.brand}
               fill
+              priority
               className="w-full h-full object-cover"
             />
           </figure>

@@ -6,7 +6,7 @@ export default function FeaturesLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="mx-auto container">
+    <div className="mx-auto min-h-screen container">
       <Header />
       {children}
     </div>
