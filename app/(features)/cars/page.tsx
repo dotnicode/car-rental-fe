@@ -8,7 +8,24 @@ const getCars = async (): Promise<Car[]> => {
 };
 
 export default async function CarsPage() {
-  const cars = await getCars();
+  let cars: Car[] = [];
+
+  cars = await getCars();
+  try {
+  } catch (error) {
+    console.error("Error al cargar los coches:", error);
+    return (
+      <div className="flex flex-col items-center justify-center p-8">
+        <h2 className="text-xl font-semibold text-red-600 mb-2">
+          ¡Ups! Algo salió mal
+        </h2>
+        <p className="text-gray-600">
+          No pudimos cargar los coches en este momento. Por favor, intenta
+          nuevamente más tarde.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div>
