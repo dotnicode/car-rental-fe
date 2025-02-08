@@ -6,7 +6,7 @@ import { Button } from "../ui/button";
 
 export default function Header() {
   return (
-    <div className="flex justify-between items-center py-4 mb-10">
+    <div className="md:flex justify-between items-center hidden mb-10 py-4">
       <Link href="/">
         <span className="flex items-center gap-2 font-bold text-xl">
           <span>CarRental</span>

@@ -1,5 +1,6 @@
-import { Car } from "@/features/car/types/car.type";
 import Image from "next/image";
+
+import { Car } from "@/features/car/types/car.type";
 
 async function getCarById(id: string): Promise<Car> {
   const car = await fetch(`http://localhost:4000/api/car/${id}`);
