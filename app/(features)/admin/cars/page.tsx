@@ -2,7 +2,6 @@ import { TypographyH1 } from "@/components/typography";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -23,9 +22,7 @@ export default async function CarAdminPage() {
   const cars = await getCars();
 
   return (
-    <div className="min-h-screen">
-      <TypographyH1>Gestionar Vehículos</TypographyH1>
-
+    <div className="mx-auto max-w-6xl min-h-screen">
       <div className="flex justify-end items-center gap-2">
         <Link href="/admin/cars/create">
           <Button>Agregar Vehículo</Button>
@@ -39,7 +36,7 @@ export default async function CarAdminPage() {
             <TableHead>Marca</TableHead>
             <TableHead>Modelo</TableHead>
             <TableHead>Precio</TableHead>
-            <TableHead className="text-right w-40">Acciones</TableHead>
+            <TableHead className="w-40 text-center">Acciones</TableHead>
           </TableRow>
         </TableHeader>
 
@@ -49,11 +46,16 @@ export default async function CarAdminPage() {
               <TableCell className="font-medium">
                 <div className="relative mx-auto w-32 aspect-video">
                   <Image
-                    src={"/vehicle-placeholder.png"}
+                    src={
+                      car.pictures[0]
+                        ? car.pictures[0].src
+                        : "/vehicle-placeholder.png"
+                    }
                     alt={car.brand}
                     fill
                     priority
-                    className="rounded-lg object-cover"
+                    className="rounded object-cover"
+                    sizes="(max-width: 768px) 50vw, (max-width: 1200px) 40vw, 33vw"
                   />
                 </div>
               </TableCell>

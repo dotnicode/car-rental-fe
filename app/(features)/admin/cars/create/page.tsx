@@ -1,11 +1,9 @@
 "use client";
 
-import { TypographyH1 } from "@/components/typography";
-
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { TypographyH1 } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -16,7 +14,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
@@ -24,8 +21,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { CarPicture } from "@/features/car/enums/car-picture.enum";
 import { useToast } from "@/hooks/use-toast";
-import { Label } from "@/components/ui/label";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { createCar, uploadCarImage } from "../actions";
+import { useRouter } from "next/navigation";
+
 const CarFormSchema = z.object({
   brand: z.string().min(1),
   model: z.string().min(1),
@@ -33,13 +36,14 @@ const CarFormSchema = z.object({
   ac: z.boolean(),
   passengers: z.number().min(1),
   color: z.string().min(1),
-  frontPicture: z.instanceof(File),
+  frontPicture: z.instanceof(File).optional(),
   leftSidePicture: z.instanceof(File).optional(),
   rightSidePicture: z.instanceof(File).optional(),
   backPicture: z.instanceof(File).optional(),
 });
 
 export default function CreateCarPage() {
+  const router = useRouter();
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof CarFormSchema>>({
@@ -59,25 +63,61 @@ export default function CreateCarPage() {
   });
 
   const onSubmit = async (values: z.infer<typeof CarFormSchema>) => {
-    console.log(values);
-
     try {
-      const response = await fetch("http://localhost:4000/api/car", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
+      const carResult = await createCar({
+        brand: values.brand,
+        model: values.model,
+        pricePerDay: values.pricePerDay,
+        ac: values.ac,
+        passengers: values.passengers,
+        color: values.color,
       });
-      if (!response.ok) {
-        throw new Error("Error al crear el vehículo");
+
+      if (!carResult.success) {
+        throw new Error(carResult.error);
       }
-      // Redireccionar o mostrar mensaje de éxito
-      alert("Vehículo creado exitosamente");
-      form.reset();
+
+      const carId = carResult.data.id;
+
+      const images = [
+        { file: values.frontPicture, type: CarPicture.FRONT, title: "front" },
+        { file: values.leftSidePicture, type: CarPicture.LEFT, title: "left" },
+        {
+          file: values.rightSidePicture,
+          type: CarPicture.RIGHT,
+          title: "right",
+        },
+        { file: values.backPicture, type: CarPicture.BACK, title: "back" },
+      ];
+
+      for (const { file, type, title } of images) {
+        if (file) {
+          const formData = new FormData();
+          formData.append("image", file);
+          formData.append("carId", carId);
+          formData.append("title", title);
+          formData.append("description", "");
+          formData.append("type", type);
+          formData.append("date", new Date().toISOString());
+
+          const imageResult = await uploadCarImage(formData);
+          if (!imageResult.success) {
+            throw new Error(imageResult.error);
+          }
+        }
+      }
+
+      toast({
+        title: "¡Vehículo añadido!",
+      });
+
+      router.push("/admin/cars");
     } catch (error) {
       console.error("Error:", error);
-      alert("Error al crear el vehículo");
+      toast({
+        variant: "destructive",
+        title: "Error al añadir el vehículo",
+      });
     }
   };
 
