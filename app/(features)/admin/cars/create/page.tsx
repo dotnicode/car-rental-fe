@@ -1,0 +1,256 @@
+"use client";
+
+import { TypographyH1 } from "@/components/typography";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+const CarFormSchema = z.object({
+  brand: z.string().min(1),
+  model: z.string().min(1),
+  pricePerDay: z.number().min(1),
+  ac: z.boolean(),
+  passengers: z.number().min(1),
+  color: z.string().min(1),
+  pictures: z.array(z.string()).min(1).optional(),
+});
+
+export default function CreateCarPage() {
+  const form = useForm<z.infer<typeof CarFormSchema>>({
+    resolver: zodResolver(CarFormSchema),
+    defaultValues: {
+      brand: "",
+      model: "",
+      pricePerDay: 0,
+      ac: false,
+      passengers: 1,
+      color: "",
+    },
+  });
+
+  const onSubmit = async (values: z.infer<typeof CarFormSchema>) => {
+    try {
+      const response = await fetch("http://localhost:4000/api/car", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+
+      if (!response.ok) {
+        throw new Error("Error al crear el vehículo");
+      }
+
+      // Redireccionar o mostrar mensaje de éxito
+      alert("Vehículo creado exitosamente");
+      form.reset();
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Error al crear el vehículo");
+    }
+  };
+
+  return (
+    <div className="bg-gray-50 p-8 min-h-screen">
+      <div className="bg-white shadow-sm mx-auto p-8 rounded-xl max-w-5xl">
+        <TypographyH1 className="mb-8">Crear Vehículo</TypographyH1>
+
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <div className="gap-8 grid grid-cols-2">
+              <div className="space-y-6 bg-gray-50 p-6 rounded-lg">
+                <FormField
+                  control={form.control}
+                  name="brand"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-700">Marca</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="border-gray-300 focus:ring-2 focus:ring-blue-500"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="model"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-700">Modelo</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="border-gray-300 focus:ring-2 focus:ring-blue-500"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="pricePerDay"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-700">
+                        Precio por día
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="number"
+                          onChange={(e) =>
+                            field.onChange(Number(e.target.value))
+                          }
+                          className="border-gray-300 focus:ring-2 focus:ring-blue-500"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="passengers"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-700">Pasajeros</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={(value) =>
+                            field.onChange(Number(value))
+                          }
+                          defaultValue={field.value.toString()}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Cantidad de pasajeros" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="1">1</SelectItem>
+                            <SelectItem value="2">2</SelectItem>
+                            <SelectItem value="3">3</SelectItem>
+                            <SelectItem value="4">4</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="color"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-700">Color</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="border-gray-300 focus:ring-2 focus:ring-blue-500"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="ac"
+                  render={({ field }) => (
+                    <FormItem className="flex justify-between items-center space-y-0 p-4 border rounded-lg">
+                      <div className="space-y-0.5">
+                        <FormLabel className="text-gray-700">
+                          Aire acondicionado
+                        </FormLabel>
+                        <p className="text-gray-500 text-sm">
+                          El vehículo cuenta con aire acondicionado
+                        </p>
+                      </div>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="space-y-4">
+                <FormLabel className="text-gray-700">Imágenes</FormLabel>
+                <div className="border-2 border-gray-200 bg-gray-50 hover:bg-gray-100 p-12 border-dashed rounded-lg text-center transition-colors cursor-pointer">
+                  <div className="space-y-2">
+                    <svg
+                      className="mx-auto w-12 h-12 text-gray-400"
+                      stroke="currentColor"
+                      fill="none"
+                      viewBox="0 0 48 48"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                        strokeWidth={2}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                    <p className="text-gray-500">
+                      Arrastra y suelta las imágenes aquí
+                    </p>
+                    <p className="text-gray-500 text-sm">
+                      o{" "}
+                      <span className="text-blue-500 hover:text-blue-600">
+                        selecciona un archivo
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end">
+              <Button
+                type="submit"
+                className="bg-blue-600 hover:bg-blue-700 px-8 py-2 rounded-lg text-white"
+              >
+                Agregar Vehículo
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </div>
+    </div>
+  );
+}

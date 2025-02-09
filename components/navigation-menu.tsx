@@ -23,7 +23,7 @@ const adminRoutes: {
 }[] = [
   {
     title: "Vehículos",
-    href: "/cars/admin",
+    href: "/admin/cars",
     description: "Gestiona tus vehículos disponibles para la renta.",
     icon: <Icons.Car />,
   },
@@ -63,9 +63,7 @@ export function NavigationMenu() {
         </NavigationMenuItem>
 
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="text-emerald-600">
-            Administración
-          </NavigationMenuTrigger>
+          <NavigationMenuTrigger>Administración</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="gap-3 grid md:grid-cols-2 p-4 w-[400px] md:w-[500px] lg:w-[600px]">
               {adminRoutes.map((option) => (
