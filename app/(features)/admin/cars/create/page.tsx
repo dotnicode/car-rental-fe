@@ -26,7 +26,7 @@ import { CarPicture } from "@/features/car/enums/car-picture.enum";
 import { useToast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { createCar, uploadCarImage } from "../actions";
+import { createCarAction, uploadCarImageAction } from "../actions";
 import { useRouter } from "next/navigation";
 
 const CarFormSchema = z.object({
@@ -64,7 +64,7 @@ export default function CreateCarPage() {
 
   const onSubmit = async (values: z.infer<typeof CarFormSchema>) => {
     try {
-      const carResult = await createCar({
+      const carResult = await createCarAction({
         brand: values.brand,
         model: values.model,
         pricePerDay: values.pricePerDay,
@@ -100,7 +100,7 @@ export default function CreateCarPage() {
           formData.append("type", type);
           formData.append("date", new Date().toISOString());
 
-          const imageResult = await uploadCarImage(formData);
+          const imageResult = await uploadCarImageAction(formData);
           if (!imageResult.success) {
             throw new Error(imageResult.error);
           }

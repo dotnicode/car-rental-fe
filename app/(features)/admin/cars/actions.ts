@@ -1,6 +1,7 @@
 "use server";
 
 import { Car } from "@/features/car/types/car.type";
+import { toast } from "@/hooks/use-toast";
 import { revalidatePath } from "next/cache";
 
 type CreateCarData = Pick<
@@ -8,7 +9,7 @@ type CreateCarData = Pick<
   "brand" | "model" | "pricePerDay" | "ac" | "passengers" | "color"
 >;
 
-export async function createCar(carData: CreateCarData) {
+export async function createCarAction(carData: CreateCarData) {
   try {
     const response = await fetch("http://localhost:4000/api/car", {
       method: "POST",
@@ -31,7 +32,7 @@ export async function createCar(carData: CreateCarData) {
   }
 }
 
-export async function uploadCarImage(formData: FormData) {
+export async function uploadCarImageAction(formData: FormData) {
   try {
     const response = await fetch("http://localhost:4000/api/picture", {
       method: "POST",
@@ -48,5 +49,23 @@ export async function uploadCarImage(formData: FormData) {
   } catch (error) {
     console.error("Error uploading image:", error);
     return { success: false, error: "Error al subir la imagen" };
+  }
+}
+
+export async function deleteCarAction(formData: FormData) {
+  const id = formData.get("id") as string;
+
+  try {
+    const response = await fetch(`http://localhost:4000/api/car/${id}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
+    revalidatePath("/admin/cars");
+  } catch (error) {
+    console.error("Error deleting car:", error);
   }
 }

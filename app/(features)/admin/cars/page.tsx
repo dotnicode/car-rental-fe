@@ -1,4 +1,3 @@
-import { TypographyH1 } from "@/components/typography";
 import {
   Table,
   TableBody,
@@ -11,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Car } from "@/features/car/types/car.type";
 import Image from "next/image";
 import Link from "next/link";
+import { deleteCarAction } from "./actions";
 
 const getCars = async (): Promise<Car[]> => {
   const res = await fetch("http://localhost:4000/api/car");
@@ -73,7 +73,14 @@ export default async function CarAdminPage() {
               <TableCell>
                 <div className="flex justify-end items-center gap-2 px-4 h-full min-h-[80px]">
                   <Button variant="outline">Editar</Button>
-                  <Button variant="destructive">Eliminar</Button>
+
+                  <form action={deleteCarAction}>
+                    <input type="hidden" name="id" value={car.id.toString()} />
+
+                    <Button variant="destructive" type="submit">
+                      Eliminar
+                    </Button>
+                  </form>
                 </div>
               </TableCell>
             </TableRow>
