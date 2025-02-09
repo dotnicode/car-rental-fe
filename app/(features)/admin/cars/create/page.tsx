@@ -24,7 +24,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
+import { useToast } from "@/hooks/use-toast";
+import { Label } from "@/components/ui/label";
 const CarFormSchema = z.object({
   brand: z.string().min(1),
   model: z.string().min(1),
@@ -32,10 +33,15 @@ const CarFormSchema = z.object({
   ac: z.boolean(),
   passengers: z.number().min(1),
   color: z.string().min(1),
-  pictures: z.array(z.string()).min(1).optional(),
+  frontPicture: z.instanceof(File),
+  leftSidePicture: z.instanceof(File).optional(),
+  rightSidePicture: z.instanceof(File).optional(),
+  backPicture: z.instanceof(File).optional(),
 });
 
 export default function CreateCarPage() {
+  const { toast } = useToast();
+
   const form = useForm<z.infer<typeof CarFormSchema>>({
     resolver: zodResolver(CarFormSchema),
     defaultValues: {
@@ -45,10 +51,16 @@ export default function CreateCarPage() {
       ac: false,
       passengers: 1,
       color: "",
+      frontPicture: undefined,
+      leftSidePicture: undefined,
+      rightSidePicture: undefined,
+      backPicture: undefined,
     },
   });
 
   const onSubmit = async (values: z.infer<typeof CarFormSchema>) => {
+    console.log(values);
+
     try {
       const response = await fetch("http://localhost:4000/api/car", {
         method: "POST",
@@ -57,11 +69,9 @@ export default function CreateCarPage() {
         },
         body: JSON.stringify(values),
       });
-
       if (!response.ok) {
         throw new Error("Error al crear el vehículo");
       }
-
       // Redireccionar o mostrar mensaje de éxito
       alert("Vehículo creado exitosamente");
       form.reset();
@@ -208,12 +218,11 @@ export default function CreateCarPage() {
                 />
               </div>
 
-              <div className="space-y-4">
-                <FormLabel className="text-gray-700">Imágenes</FormLabel>
-                <div className="border-2 border-gray-200 bg-gray-50 hover:bg-gray-100 p-12 border-dashed rounded-lg text-center transition-colors cursor-pointer">
-                  <div className="space-y-2">
+              <div className="border-2 border-gray-200 bg-gray-50 p-12 border-dashed rounded-lg text-center transition-colors">
+                <div className="space-y-6">
+                  <FormLabel className="flex items-center gap-2 text-gray-700">
                     <svg
-                      className="mx-auto w-12 h-12 text-gray-400"
+                      className="w-12 h-12 text-gray-400"
                       stroke="currentColor"
                       fill="none"
                       viewBox="0 0 48 48"
@@ -226,16 +235,202 @@ export default function CreateCarPage() {
                         strokeLinejoin="round"
                       />
                     </svg>
-                    <p className="text-gray-500">
-                      Arrastra y suelta las imágenes aquí
-                    </p>
-                    <p className="text-gray-500 text-sm">
-                      o{" "}
-                      <span className="text-blue-500 hover:text-blue-600">
-                        selecciona un archivo
-                      </span>
-                    </p>
-                  </div>
+                    Imágenes
+                  </FormLabel>
+
+                  <FormField
+                    control={form.control}
+                    name="frontPicture"
+                    render={({ field: { onChange, value, ...field } }) => (
+                      <FormItem className="flex items-center gap-4">
+                        <FormLabel className="w-20 text-left">
+                          Frontal
+                        </FormLabel>
+                        <FormControl>
+                          <div
+                            className={`relative border-2 rounded-lg ${
+                              value ? "border-green-500" : "border-transparent"
+                            }`}
+                          >
+                            <Input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) onChange(file);
+                              }}
+                              className={
+                                value ? "border-none focus:ring-0" : ""
+                              }
+                            />
+                            {value && (
+                              <svg
+                                className="top-1/2 right-2 absolute w-5 h-5 text-green-500 transform -translate-y-1/2"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M5 13l4 4L19 7"
+                                />
+                              </svg>
+                            )}
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="leftSidePicture"
+                    render={({ field: { onChange, value, ...field } }) => (
+                      <FormItem className="flex items-center gap-4">
+                        <FormLabel className="w-20 text-left">
+                          Lateral Izquierdo
+                        </FormLabel>
+                        <FormControl>
+                          <div
+                            className={`relative ${
+                              value
+                                ? "border-green-500 border-2 rounded-lg"
+                                : ""
+                            }`}
+                          >
+                            <Input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) onChange(file);
+                              }}
+                              className={
+                                value ? "border-none focus:ring-0" : ""
+                              }
+                            />
+                            {value && (
+                              <svg
+                                className="top-1/2 right-2 absolute w-5 h-5 text-green-500 transform -translate-y-1/2"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M5 13l4 4L19 7"
+                                />
+                              </svg>
+                            )}
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="rightSidePicture"
+                    render={({ field: { onChange, value, ...field } }) => (
+                      <FormItem className="flex items-center gap-4">
+                        <FormLabel className="w-20 text-left">
+                          Lateral Derecho
+                        </FormLabel>
+                        <FormControl>
+                          <div
+                            className={`relative ${
+                              value
+                                ? "border-green-500 border-2 rounded-lg"
+                                : ""
+                            }`}
+                          >
+                            <Input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) onChange(file);
+                              }}
+                              className={
+                                value ? "border-none focus:ring-0" : ""
+                              }
+                            />
+                            {value && (
+                              <svg
+                                className="top-1/2 right-2 absolute w-5 h-5 text-green-500 transform -translate-y-1/2"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M5 13l4 4L19 7"
+                                />
+                              </svg>
+                            )}
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="backPicture"
+                    render={({ field: { onChange, value, ...field } }) => (
+                      <FormItem className="flex items-center gap-4">
+                        <FormLabel className="w-20 text-left">
+                          Trasera
+                        </FormLabel>
+                        <FormControl>
+                          <div
+                            className={`relative ${
+                              value
+                                ? "border-green-500 border-2 rounded-lg"
+                                : ""
+                            }`}
+                          >
+                            <Input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) onChange(file);
+                              }}
+                              className={
+                                value ? "border-none focus:ring-0" : ""
+                              }
+                            />
+                            {value && (
+                              <svg
+                                className="top-1/2 right-2 absolute w-5 h-5 text-green-500 transform -translate-y-1/2"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M5 13l4 4L19 7"
+                                />
+                              </svg>
+                            )}
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
               </div>
             </div>
