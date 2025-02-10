@@ -15,6 +15,8 @@ import { deleteCarAction } from "./actions";
 const getCars = async (): Promise<Car[]> => {
   const res = await fetch("http://localhost:4000/api/car");
   const data = await res.json();
+
+  console.log(data);
   return data;
 };
 
@@ -25,7 +27,7 @@ export default async function CarAdminPage() {
     <div className="mx-auto max-w-6xl min-h-screen">
       <div className="flex justify-end items-center gap-2">
         <Link href="/admin/cars/create">
-          <Button>Agregar Vehículo</Button>
+          <Button className="bg-purple-500 hover:bg-purple-600">Agregar Vehículo</Button>
         </Link>
       </div>
 
@@ -42,15 +44,11 @@ export default async function CarAdminPage() {
 
         <TableBody>
           {cars.map((car) => (
-            <TableRow key={car.id} className="hover:bg-gray-100">
+            <TableRow key={car.id} className="hover:bg-purple-50">
               <TableCell className="font-medium">
                 <div className="relative mx-auto w-32 aspect-video">
                   <Image
-                    src={
-                      car.pictures[0]
-                        ? car.pictures[0].src
-                        : "/vehicle-placeholder.png"
-                    }
+                    src={car.pictures[0] ? car.pictures[0].src : "/vehicle-placeholder.png"}
                     alt={car.brand}
                     fill
                     priority
@@ -72,7 +70,9 @@ export default async function CarAdminPage() {
               </TableCell>
               <TableCell>
                 <div className="flex justify-end items-center gap-2 px-4 h-full min-h-[80px]">
-                  <Button variant="outline">Editar</Button>
+                  <Link href={`/admin/cars/${car.id}`}>
+                    <Button variant="outline">Editar</Button>
+                  </Link>
 
                   <form action={deleteCarAction}>
                     <input type="hidden" name="id" value={car.id.toString()} />
