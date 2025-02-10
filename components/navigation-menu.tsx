@@ -13,43 +13,19 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { Icons } from "./icons";
 
-const rentingOptions: { title: string; href: string; description: string }[] = [
+const adminRoutes: {
+  title: string;
+  href: string;
+  description: string;
+  icon: React.ReactNode;
+}[] = [
   {
-    title: "Reserva Inmediata",
-    href: "/cars/reserve",
-    description:
-      "Reserva tu vehículo de forma rápida y sencilla para las fechas que necesites.",
-  },
-  {
-    title: "Catálogo de Vehículos",
-    href: "/cars/catalog",
-    description:
-      "Explora nuestra amplia gama de vehículos disponibles para renta.",
-  },
-  {
-    title: "Ofertas Especiales",
-    href: "/cars/offers",
-    description:
-      "Descubre nuestras promociones y descuentos especiales en renta de vehículos.",
-  },
-  {
-    title: "Requisitos de Renta",
-    href: "/cars/requirements",
-    description:
-      "Información sobre los documentos y requisitos necesarios para rentar un vehículo.",
-  },
-  {
-    title: "Seguros y Coberturas",
-    href: "/cars/insurance",
-    description:
-      "Conoce nuestras opciones de seguros y coberturas disponibles para tu tranquilidad.",
-  },
-  {
-    title: "Servicios Adicionales",
-    href: "/cars/services",
-    description:
-      "GPS, sillas para bebé, conductor adicional y otros servicios complementarios.",
+    title: "Vehículos",
+    href: "/admin/cars",
+    description: "Gestiona tus vehículos disponibles para la renta.",
+    icon: <Icons.Car />,
   },
 ];
 
@@ -68,34 +44,29 @@ export function NavigationMenu() {
                     href="/"
                   >
                     <div className="-z-10 absolute inset-0 bg-gradient-to-t from-black/70 to-black/10" />
-                    <div className="mt-4 mb-2 font-medium text-lg text-white">
-                      Car Rent
+                    <div className="flex flex-col mt-4 font-medium text-lg text-white">
+                      <span className="font-bold">Inicio</span>
                     </div>
                     <p className="text-gray-100 text-sm leading-tight">
-                      Tu mejor opción para rentar vehículos de forma segura y
-                      confiable.
+                      Car Rental, tu mejor opción para rentar vehículos de forma
+                      segura y confiable.
                     </p>
                   </Link>
                 </NavigationMenuLink>
               </li>
-              <ListItem href="/cars" title="Renta un Auto">
+
+              <ListItem href="/cars" title="Rentar un Auto">
                 Encuentra el vehículo perfecto para tus necesidades.
-              </ListItem>
-              <ListItem href="/cars/locations" title="Ubicaciones">
-                Encuentra nuestras sucursales y puntos de entrega.
-              </ListItem>
-              <ListItem href="/cars/about" title="Sobre Nosotros">
-                Conoce nuestra historia y compromiso con el servicio.
               </ListItem>
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
 
         <NavigationMenuItem>
-          <NavigationMenuTrigger>Servicios de Renta</NavigationMenuTrigger>
+          <NavigationMenuTrigger>Administración</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="gap-3 grid md:grid-cols-2 p-4 w-[400px] md:w-[500px] lg:w-[600px]">
-              {rentingOptions.map((option) => (
+              {adminRoutes.map((option) => (
                 <ListItem
                   key={option.title}
                   title={option.title}
